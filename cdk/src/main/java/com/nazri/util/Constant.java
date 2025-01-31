@@ -14,4 +14,7 @@ public final class Constant {
     public static final String SIT = "sit";
     public static final String UAT = "uat";
     public static final String PRD = "prd";
+
+
+    public static final String FIREBASE_PROJECT_ID = System.getenv("GRATITUDEJAR_FIREBASE_PROJECT_ID");
 }

@@ -2,10 +2,9 @@ package com.nazri;
 
 import com.nazri.config.StackConfig;
 import com.nazri.stack.APIGatewayStack;
-import com.nazri.stack.CdkStack;
+import com.nazri.stack.LambdaStack;
 import com.nazri.util.Constant;
 import software.amazon.awscdk.App;
-import software.amazon.awscdk.StackProps;
 
 public class CdkApp {
     public static void main(final String[] args) {
@@ -13,15 +12,21 @@ public class CdkApp {
 
         String environment = Constant.DEV;
 
-
         StackConfig stackConfig = getStackConfig(environment);
+
+        LambdaStack apiLambdaStack = new LambdaStack(app, "gratitudejar-lambda-stack", stackConfig.getStackProps()
+                .stackName("gratitudejar-lambda-stack")
+                .description("Lambda Stack for Gratitude Jar")
+                .build(),
+                stackConfig
+        );
 
         new APIGatewayStack(app, "gratitudejar-api-stack", stackConfig.getStackProps()
                 .stackName("gratitudejar-api-stack")
                 .description("HTTP API Gateway Stack for Gratitude Jar")
                 .build(),
                 stackConfig,
-                null);
+                apiLambdaStack.getApiFunction());
 
         app.synth();
     }
