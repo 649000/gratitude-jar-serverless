@@ -7,7 +7,7 @@
         <artifactId>gratitude-jar-serverless</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>gratitude-jar-cdk</artifactId>
+    <artifactId>cdk</artifactId>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
