@@ -56,8 +56,8 @@ public class JwtAuthoriser implements RequestHandler<APIGatewayProxyRequestEvent
 
             // Pass user details to the Quarkus app
             Map<String, String> userDetails = Map.of(
-                    "uid", uid,
-                    "email", email
+                    "X-User-Id", uid,
+                    "X-User-Email", email
             );
 
             return new APIGatewayProxyResponseEvent()

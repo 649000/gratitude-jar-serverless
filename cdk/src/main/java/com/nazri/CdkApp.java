@@ -1,10 +1,8 @@
-package com.myorg;
+package com.nazri;
 
+import com.nazri.stack.CdkStack;
 import software.amazon.awscdk.App;
-import software.amazon.awscdk.Environment;
 import software.amazon.awscdk.StackProps;
-
-import java.util.Arrays;
 
 public class CdkApp {
     public static void main(final String[] args) {
