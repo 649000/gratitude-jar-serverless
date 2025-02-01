@@ -1,11 +1,15 @@
 package com.nazri.controller;
 
+import com.amazonaws.services.lambda.runtime.events.APIGatewayV2HTTPEvent;
 import com.nazri.model.Gratitude;
 import com.nazri.repository.GratitudeRepository;
+import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.SecurityContext;
 import org.jboss.logging.Logger;
 
 import java.util.List;
@@ -21,9 +25,17 @@ public class GratitudeController {
     @Inject
     GratitudeRepository gratitudeRepository;
 
+    @Context
+    SecurityContext securityContext;
+
+    @Context
+    SecurityIdentity securityIdentity;
+
     @GET
     public List<Gratitude> getAllGratitudes() {
-//        log.info(event.toString());
+        //TODO: Exploration on security, both are possible contextes
+        log.info(": SECURITY CONTEXT: "+ securityContext.getUserPrincipal().getName());
+        log.info(": SECURITY IDENTITY: "+ securityIdentity.getPrincipal().getName());
         return gratitudeRepository.listAll();
     }
 
