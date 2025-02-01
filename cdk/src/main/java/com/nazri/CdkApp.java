@@ -21,8 +21,8 @@ public class CdkApp {
                 stackConfig
         );
 
-        new APIGatewayStack(app, "gratitudejar-api-stack", stackConfig.getStackProps()
-                .stackName("gratitudejar-api-stack")
+        new APIGatewayStack(app, "gratitudejar-api-gw-stack", stackConfig.getStackProps()
+                .stackName("gratitudejar-api-gw-stack")
                 .description("HTTP API Gateway Stack for Gratitude Jar")
                 .build(),
                 stackConfig,
