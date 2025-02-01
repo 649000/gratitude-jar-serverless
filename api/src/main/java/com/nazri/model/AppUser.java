@@ -7,6 +7,7 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -20,9 +21,11 @@ public class AppUser extends PanacheEntityBase {
     private String userUID;
 
     @CreationTimestamp
+    @NotNull(message = "Created Date/Time cannot be null")
     private LocalDateTime createdDate;
 
     @UpdateTimestamp
+    @NotNull(message = "Updated Date/Time cannot be null")
     private LocalDateTime updatedDate;
 
     @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -16,19 +16,21 @@ import java.time.LocalDateTime;
 @Cacheable
 public class Gratitude extends PanacheEntity {
 
-    @NotNull(message = "Message cannot be null")
+    @NotNull(message = "Gratitude cannot be null")
     @Size(min = 1, max = 2000, message = "Message must be between 1 and 500 characters")
     private String message;
 
     @CreationTimestamp
+    @NotNull(message = "Created Date/Time cannot be null")
     private LocalDateTime createdDate;
 
     @UpdateTimestamp
+    @NotNull(message = "Updated Date/Time cannot be null")
     private LocalDateTime updatedDate;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @NotNull(message = "AppUser cannot be null")
+    @NotNull(message = "App User cannot be null")
     private AppUser appUser;
 
     public AppUser getUser() {
