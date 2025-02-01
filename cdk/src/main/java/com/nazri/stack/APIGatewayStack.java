@@ -6,7 +6,10 @@ import com.nazri.util.TagUtil;
 import software.amazon.awscdk.Stack;
 import software.amazon.awscdk.StackProps;
 import software.amazon.awscdk.aws_apigatewayv2_authorizers.HttpJwtAuthorizer;
+import software.amazon.awscdk.aws_apigatewayv2_integrations.HttpLambdaIntegration;
+import software.amazon.awscdk.services.apigatewayv2.AddRoutesOptions;
 import software.amazon.awscdk.services.apigatewayv2.HttpApi;
+import software.amazon.awscdk.services.apigatewayv2.HttpMethod;
 import software.amazon.awscdk.services.lambda.Function;
 import software.constructs.Construct;
 
@@ -20,6 +23,7 @@ public class APIGatewayStack extends Stack {
         super(scope, id, props);
         this.stackConfig = stackConfig;
         this.httpApi = createHTTPAPIGateway();
+        addGratitudeRoute(function);
         TagUtil.addTags(this.httpApi, stackConfig);
     }
 
@@ -34,5 +38,15 @@ public class APIGatewayStack extends Stack {
                         .jwtAudience(List.of(Constant.FIREBASE_PROJECT_ID))
                         .build())
                 .build();
+    }
+
+    private void addGratitudeRoute(Function function) {
+        httpApi.addRoutes(AddRoutesOptions.builder()
+                .path("/api/gratitude")
+                .methods(List.of(HttpMethod.GET))
+                .integration(HttpLambdaIntegration.Builder
+                        .create("gratitudejar-gratitude-get-integration", function)
+                        .build())
+                .build());
     }
 }
