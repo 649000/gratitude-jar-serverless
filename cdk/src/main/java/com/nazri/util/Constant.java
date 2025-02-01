@@ -17,4 +17,8 @@ public final class Constant {
 
 
     public static final String FIREBASE_PROJECT_ID = System.getenv("GRATITUDEJAR_FIREBASE_PROJECT_ID");
+    public static final String SUPABASE_DB_URL = System.getenv("SUPABASE_DB_URL");
+    public static final String SUPABASE_DB_USER = System.getenv("SUPABASE_DB_USER");
+    public static final String SUPABASE_DB_PASSWORD = System.getenv("SUPABASE_DB_PASSWORD");
+
 }
