@@ -48,13 +48,6 @@ public class GratitudeController {
     }
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllUsers() {
-        // Logic to get all users
-        return Response.ok(gratitudeRepository.listAll()).build();
-    }
-
-    @GET
     public List<Gratitude> getAllGratitudes() {
         //TODO: Exploration on security, both are possible contexts
         log.info(": SECURITY CONTEXT: "+ securityContext.getUserPrincipal().getName());
