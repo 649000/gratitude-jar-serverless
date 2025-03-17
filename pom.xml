@@ -9,6 +9,5 @@
     <modules>
         <module>api</module>
         <module>cdk</module>
-        <module>jwt-authoriser</module>
     </modules>
 </project>
