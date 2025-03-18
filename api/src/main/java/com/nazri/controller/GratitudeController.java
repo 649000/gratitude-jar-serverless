@@ -18,12 +18,11 @@ import java.util.List;
 
 @ApplicationScoped
 @Path("/api/gratitude")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class GratitudeController {
 
     private static final Logger log = Logger.getLogger(GratitudeController.class);
-
-    @Inject
-    GratitudeRepository gratitudeRepository;
 
     @Inject
     GratitudeService gratitudeService;
@@ -31,48 +30,53 @@ public class GratitudeController {
     @Context
     SecurityContext securityContext;
 
-    @Context
-    SecurityIdentity securityIdentity;
+//    @Context
+//    SecurityIdentity securityIdentity;
+//     log.info(": SECURITY IDENTITY: "+ securityIdentity.getPrincipal().getName());
+
+
+    // Helper method to get the current user's UID
+    private String getCurrentUserUID() {
+        return securityContext.getUserPrincipal().getName();
+    }
 
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response createGratitude(@Valid Gratitude gratitude) {
-        //gratitude.setUser();
-        gratitudeRepository.persist(gratitude);
+    public Response createGratitude(Gratitude gratitude) {
+        String userUID = getCurrentUserUID();
+        Gratitude createdGratitude = gratitudeService.createGratitude(gratitude, userUID);
+        return Response.status(Response.Status.CREATED).entity(createdGratitude).build();
+    }
+
+    // Read (Single)
+    @GET
+    @Path("/{id}")
+    public Response getGratitudeById(@PathParam("id") Long id) {
+        String userUID = getCurrentUserUID();
+        Gratitude gratitude = gratitudeService.findGratitudeByIdAndUserUID(id, userUID);
         return Response.ok(gratitude).build();
     }
 
+    // Read (All for the Current User)
     @GET
-    @Path("/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getGratitudeById(@PathParam("id") Long id) {
-        return gratitudeService.getGratitudeById(id)
-                .map(gratitude -> Response.ok(gratitude).build())
-                .orElseGet(() -> Response.status(Response.Status.NOT_FOUND).build());
+    public List<Gratitude> getAllGratitudesForCurrentUser() {
+        String userUID = getCurrentUserUID();
+        return gratitudeService.findAllGratitudesForUser(userUID);
     }
 
-    @GET
-    public List<Gratitude> getAllGratitude() {
-        //TODO: Exploration on security, both are possible contexts
-        log.info(": SECURITY CONTEXT: "+ securityContext.getUserPrincipal().getName());
-        log.info(": SECURITY IDENTITY: "+ securityIdentity.getPrincipal().getName());
-        return gratitudeRepository.listAll();
-    }
-
+    // Update
     @PUT
     @Path("/{id}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     public Response updateGratitude(@PathParam("id") Long id, Gratitude gratitude) {
-        // Logic to gratitude a user
-        return Response.ok(gratitude).build();
+        String userUID = getCurrentUserUID();
+        Gratitude updatedGratitude = gratitudeService.updateGratitude(id, gratitude, userUID);
+        return Response.ok(updatedGratitude).build();
     }
 
     @DELETE
     @Path("/{id}")
     public Response deleteGratitude(@PathParam("id") Long id) {
-        // Logic to delete a user
+        String userUID = getCurrentUserUID();
+        gratitudeService.deleteGratitude(id, userUID);
         return Response.noContent().build();
     }
 }

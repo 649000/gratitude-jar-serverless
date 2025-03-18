@@ -9,10 +9,10 @@ import java.util.Optional;
 
 @ApplicationScoped
 public class GratitudeRepository implements PanacheRepository<Gratitude> {
-    // Custom method to find Gratitude by id and userUID
+
     public Optional<Gratitude> findByIdAndUserUID(Long id, String userUID) {
         return find("id = :id AND appUser.userUID = :userUID",
                 Parameters.with("id", id).and("userUID", userUID))
-                .firstResultOptional(); // Returns the first matching result or null
+                .firstResultOptional();
     }
 }

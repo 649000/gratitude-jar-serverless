@@ -2,13 +2,16 @@ package com.nazri.service;
 
 import com.nazri.model.Gratitude;
 import com.nazri.repository.GratitudeRepository;
+import com.nazri.repository.UserRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.SecurityContext;
 
 import java.util.List;
-import java.util.Optional;
+
+import static io.quarkus.hibernate.orm.panache.PanacheEntityBase.list;
 
 @ApplicationScoped
 public class GratitudeService {
@@ -19,38 +22,43 @@ public class GratitudeService {
     @Inject
     GratitudeRepository gratitudeRepository;
 
+    @Inject
+    UserRepository userRepository;
 
-    public Optional<Gratitude> getGratitudeById(Long id) {
-        return gratitudeRepository.findByIdAndUserUID(id, securityContext.getUserPrincipal().getName());
+    // Create
+    public Gratitude createGratitude(Gratitude gratitude, String userUID) {
+        gratitude.setUser(userRepository.find("userUID", userUID).firstResult());
+        gratitudeRepository.persist(gratitude);
+        return gratitude;
     }
 
-    public List<Gratitude> getAllGratitudes() {
-        return gratitudeRepository.listAll();
+    // Read (Single)
+    public Gratitude findGratitudeByIdAndUserUID(Long id, String userUID) {
+        return gratitudeRepository.findByIdAndUserUID(id, userUID)
+                .orElseThrow(() -> new NotFoundException("Gratitude with ID " + id + " not found or does not belong to you."));
+    }
+
+    // Read (All for a User)
+    public List<Gratitude> findAllGratitudesForUser(String userUID) {
+        return list("appUser.userUID", userUID);
     }
 
 
-    public void updateGratitude(Long id, Gratitude gratitude, String userUID) {
-        // Ownership check
-        Optional<Gratitude> existingGratitudeOpt = gratitudeRepository.findByIdAndUserUID(id, userUID);
-        if (existingGratitudeOpt.isEmpty()) {
-            throw new SecurityException("You are not authorized to update this Gratitude.");
-        }
+    // Update
+    public Gratitude updateGratitude(Long id, Gratitude gratitude, String userUID) {
+        Gratitude existingGratitude = gratitudeRepository.findByIdAndUserUID(id, userUID)
+                .orElseThrow(() -> new NotFoundException("Gratitude with ID " + id + " not found or does not belong to you."));
 
-        // Update the entity
-        Gratitude existingGratitude = existingGratitudeOpt.get();
         existingGratitude.setMessage(gratitude.getMessage());
         gratitudeRepository.persist(existingGratitude);
+        return existingGratitude;
     }
 
+    // Delete
+    public void deleteGratitude(Long id, String userUID) {
+        Gratitude existingGratitude = gratitudeRepository.findByIdAndUserUID(id, userUID)
+                .orElseThrow(() -> new NotFoundException("Gratitude with ID " + id + " not found or does not belong to you."));
 
-    public boolean deleteGratitude(Long id, String userUID) {
-        // Ownership check
-        Optional<Gratitude> existingGratitudeOpt = gratitudeRepository.findByIdAndUserUID(id, userUID);
-        if (existingGratitudeOpt.isEmpty()) {
-            throw new SecurityException("You are not authorized to delete this Gratitude.");
-        }
-
-        // Delete the entity
-        return gratitudeRepository.deleteById(id);
+        gratitudeRepository.delete(existingGratitude);
     }
 }
