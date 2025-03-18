@@ -2,6 +2,7 @@ package com.nazri.controller;
 
 import com.nazri.model.Gratitude;
 import com.nazri.repository.GratitudeRepository;
+import com.nazri.service.GratitudeService;
 import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -24,6 +25,9 @@ public class GratitudeController {
     @Inject
     GratitudeRepository gratitudeRepository;
 
+    @Inject
+    GratitudeService gratitudeService;
+
     @Context
     SecurityContext securityContext;
 
@@ -43,12 +47,13 @@ public class GratitudeController {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getGratitudeById(@PathParam("id") Long id) {
-        // Logic to get a gratitude by ID
-        return Response.ok("gratitude").build();
+        return gratitudeService.getGratitudeById(id)
+                .map(gratitude -> Response.ok(gratitude).build())
+                .orElseGet(() -> Response.status(Response.Status.NOT_FOUND).build());
     }
 
     @GET
-    public List<Gratitude> getAllGratitudes() {
+    public List<Gratitude> getAllGratitude() {
         //TODO: Exploration on security, both are possible contexts
         log.info(": SECURITY CONTEXT: "+ securityContext.getUserPrincipal().getName());
         log.info(": SECURITY IDENTITY: "+ securityIdentity.getPrincipal().getName());
