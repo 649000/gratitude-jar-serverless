@@ -40,7 +40,7 @@ public class GratitudeService {
 
     // Read (All for a User)
     public List<Gratitude> findAllGratitudesForUser(String userUID) {
-        return list("appUser.userUID", userUID);
+        return gratitudeRepository.find("appUser.userUID", userUID).list();
     }
 
 
