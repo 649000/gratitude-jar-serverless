@@ -1,7 +1,8 @@
-package com.nazri;
+package com.nazri.config;
 
 
 import com.amazonaws.services.lambda.runtime.events.APIGatewayV2HTTPEvent;
+import io.quarkus.arc.profile.IfBuildProfile;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;
 import jakarta.ws.rs.container.PreMatching;
@@ -16,6 +17,7 @@ import java.security.Principal;
 
 @Provider
 @PreMatching
+@IfBuildProfile("!local")
 public class JwtSecurityContextFilter implements ContainerRequestFilter {
     private static final Logger log = Logger.getLogger(JwtSecurityContextFilter.class);
 
