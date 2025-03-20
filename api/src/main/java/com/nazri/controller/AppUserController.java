@@ -28,7 +28,7 @@ public class AppUserController {
     // Read (Single)
     @GET
     @Path("/{userUID}")
-    public Response getAppUser(@PathParam("userUID") Long userUID) {
+    public Response getAppUser(@PathParam("userUID") String userUID) {
         AppUser appUser = appUserService.findAppUserByUserUID(userUID);
         return Response.ok(appUser).build();
     }
@@ -50,7 +50,7 @@ public class AppUserController {
     // Delete
     @DELETE
     @Path("/{userUID}")
-    public Response deleteAppUser(@PathParam("userUID") Long userUID) {
+    public Response deleteAppUser(@PathParam("userUID") String userUID) {
         appUserService.deleteAppUser(userUID);
         return Response.noContent().build();
     }

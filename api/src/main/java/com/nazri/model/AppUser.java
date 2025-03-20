@@ -21,11 +21,9 @@ public class AppUser extends PanacheEntityBase {
     private String userUID;
 
     @CreationTimestamp
-    @NotNull(message = "Created Date/Time cannot be null")
     private LocalDateTime createdDate;
 
     @UpdateTimestamp
-    @NotNull(message = "Updated Date/Time cannot be null")
     private LocalDateTime updatedDate;
 
     @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL, orphanRemoval = true)

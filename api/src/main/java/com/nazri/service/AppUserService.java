@@ -4,6 +4,7 @@ import com.nazri.model.AppUser;
 import com.nazri.repository.UserRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
 
 import java.util.List;
@@ -14,14 +15,14 @@ public class AppUserService {
     @Inject
     UserRepository userRepository;
 
-    // Create
+    @Transactional
     public AppUser createAppUser(AppUser appUser) {
         userRepository.persist(appUser);
         return appUser;
     }
 
     // Read (Single)
-    public AppUser findAppUserByUserUID(Long userUID) {
+    public AppUser findAppUserByUserUID(String userUID) {
         return userRepository.findByIdOptional(userUID)
                 .orElseThrow(() -> new NotFoundException("AppUser with UID " + userUID + " not found."));
     }
@@ -42,8 +43,8 @@ public class AppUserService {
 //        return existingAppUser;
 //    }
 
-    // Delete
-    public void deleteAppUser(Long userUID) {
+    @Transactional
+    public void deleteAppUser(String userUID) {
         AppUser existingAppUser = userRepository.findByIdOptional(userUID)
                 .orElseThrow(() -> new NotFoundException("AppUser with UID " + userUID + " not found."));
 
