@@ -5,19 +5,13 @@ import com.nazri.repository.GratitudeRepository;
 import com.nazri.repository.UserRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.SecurityContext;
 
 import java.util.List;
 
-import static io.quarkus.hibernate.orm.panache.PanacheEntityBase.list;
-
 @ApplicationScoped
 public class GratitudeService {
-
-    @Context
-    SecurityContext securityContext;
 
     @Inject
     GratitudeRepository gratitudeRepository;
@@ -26,6 +20,7 @@ public class GratitudeService {
     UserRepository userRepository;
 
     // Create
+    @Transactional
     public Gratitude createGratitude(Gratitude gratitude, String userUID) {
         gratitude.setUser(userRepository.find("userUID", userUID).firstResult());
         gratitudeRepository.persist(gratitude);
@@ -45,6 +40,7 @@ public class GratitudeService {
 
 
     // Update
+    @Transactional
     public Gratitude updateGratitude(Long id, Gratitude gratitude, String userUID) {
         Gratitude existingGratitude = gratitudeRepository.findByIdAndUserUID(id, userUID)
                 .orElseThrow(() -> new NotFoundException("Gratitude with ID " + id + " not found or does not belong to you."));
@@ -55,6 +51,7 @@ public class GratitudeService {
     }
 
     // Delete
+    @Transactional
     public void deleteGratitude(Long id, String userUID) {
         Gratitude existingGratitude = gratitudeRepository.findByIdAndUserUID(id, userUID)
                 .orElseThrow(() -> new NotFoundException("Gratitude with ID " + id + " not found or does not belong to you."));

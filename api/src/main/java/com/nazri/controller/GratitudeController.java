@@ -1,12 +1,9 @@
 package com.nazri.controller;
 
 import com.nazri.model.Gratitude;
-import com.nazri.repository.GratitudeRepository;
 import com.nazri.service.GratitudeService;
-import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;

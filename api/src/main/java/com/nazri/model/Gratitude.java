@@ -1,7 +1,6 @@
 package com.nazri.model;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
-import jakarta.persistence.Cacheable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -13,7 +12,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Cacheable
 public class Gratitude extends PanacheEntity {
 
     @NotNull(message = "Gratitude cannot be null")
@@ -21,11 +19,9 @@ public class Gratitude extends PanacheEntity {
     private String message;
 
     @CreationTimestamp
-    @NotNull(message = "Created Date/Time cannot be null")
     private LocalDateTime createdDate;
 
     @UpdateTimestamp
-    @NotNull(message = "Updated Date/Time cannot be null")
     private LocalDateTime updatedDate;
 
     @ManyToOne
