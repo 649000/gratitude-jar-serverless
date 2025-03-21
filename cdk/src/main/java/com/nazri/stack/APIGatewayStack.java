@@ -24,6 +24,7 @@ public class APIGatewayStack extends Stack {
         this.stackConfig = stackConfig;
         this.httpApi = createHTTPAPIGateway();
         addGratitudeRoute(function);
+        addUserRoute(function);
         TagUtil.addTags(this.httpApi, stackConfig);
     }
 
@@ -45,7 +46,73 @@ public class APIGatewayStack extends Stack {
                 .path("/api/gratitude")
                 .methods(List.of(HttpMethod.GET))
                 .integration(HttpLambdaIntegration.Builder
+                        .create("gratitudejar-gratitude-getAll-integration", function)
+                        .build())
+                .build());
+
+        httpApi.addRoutes(AddRoutesOptions.builder()
+                .path("/api/gratitude/{gratitudeId}")
+                .methods(List.of(HttpMethod.GET))
+                .integration(HttpLambdaIntegration.Builder
                         .create("gratitudejar-gratitude-get-integration", function)
+                        .build())
+                .build());
+
+        httpApi.addRoutes(AddRoutesOptions.builder()
+                .path("/api/gratitude/{gratitudeId}")
+                .methods(List.of(HttpMethod.PUT))
+                .integration(HttpLambdaIntegration.Builder
+                        .create("gratitudejar-gratitude-put-integration", function)
+                        .build())
+                .build());
+
+        httpApi.addRoutes(AddRoutesOptions.builder()
+                .path("/api/gratitude/{gratitudeId}")
+                .methods(List.of(HttpMethod.DELETE))
+                .integration(HttpLambdaIntegration.Builder
+                        .create("gratitudejar-gratitude-delete-integration", function)
+                        .build())
+                .build());
+
+        httpApi.addRoutes(AddRoutesOptions.builder()
+                .path("/api/gratitude")
+                .methods(List.of(HttpMethod.POST))
+                .integration(HttpLambdaIntegration.Builder
+                        .create("gratitudejar-gratitude-post-integration", function)
+                        .build())
+                .build());
+    }
+
+    private void addUserRoute(Function function) {
+        httpApi.addRoutes(AddRoutesOptions.builder()
+                .path("/api/user")
+                .methods(List.of(HttpMethod.GET))
+                .integration(HttpLambdaIntegration.Builder
+                        .create("gratitudejar-user-getAll-integration", function)
+                        .build())
+                .build());
+
+        httpApi.addRoutes(AddRoutesOptions.builder()
+                .path("/api/user/{userUID}")
+                .methods(List.of(HttpMethod.GET))
+                .integration(HttpLambdaIntegration.Builder
+                        .create("gratitudejar-user-get-integration", function)
+                        .build())
+                .build());
+
+        httpApi.addRoutes(AddRoutesOptions.builder()
+                .path("/api/user/{userUID}")
+                .methods(List.of(HttpMethod.DELETE))
+                .integration(HttpLambdaIntegration.Builder
+                        .create("gratitudejar-user-delete-integration", function)
+                        .build())
+                .build());
+
+        httpApi.addRoutes(AddRoutesOptions.builder()
+                .path("/api/user")
+                .methods(List.of(HttpMethod.POST))
+                .integration(HttpLambdaIntegration.Builder
+                        .create("gratitudejar-user-post-integration", function)
                         .build())
                 .build());
     }

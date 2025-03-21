@@ -17,7 +17,7 @@ import java.security.Principal;
 
 @Provider
 @PreMatching
-@IfBuildProfile("!local")
+@IfBuildProfile("prod")
 public class JwtSecurityContextFilter implements ContainerRequestFilter {
     private static final Logger log = Logger.getLogger(JwtSecurityContextFilter.class);
 

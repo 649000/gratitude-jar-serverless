@@ -2,6 +2,7 @@ package com.nazri;
 
 import com.nazri.config.StackConfig;
 import com.nazri.stack.APIGatewayStack;
+import com.nazri.stack.EventBridgeStack;
 import com.nazri.stack.LambdaStack;
 import com.nazri.util.Constant;
 import software.amazon.awscdk.App;
@@ -24,6 +25,13 @@ public class CdkApp {
         new APIGatewayStack(app, "gratitudejar-api-gw-stack", stackConfig.getStackProps()
                 .stackName("gratitudejar-api-gw-stack")
                 .description("HTTP API Gateway Stack for Gratitude Jar")
+                .build(),
+                stackConfig,
+                apiLambdaStack.getApiFunction());
+
+        new EventBridgeStack(app, "gratitudejar-eventbridge-stack", stackConfig.getStackProps()
+                .stackName("gratitudejar-eventbridge-stack")
+                .description("Event Bridge Stack for Gratitude Jar")
                 .build(),
                 stackConfig,
                 apiLambdaStack.getApiFunction());
